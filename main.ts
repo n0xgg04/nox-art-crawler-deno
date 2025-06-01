@@ -8,6 +8,7 @@ import {
   JSON as HeroNames,
 } from "./constants/api.ts";
 import { discord } from "./core/discord.ts";
+import { discordQueue } from "./core/queue.ts";
 import { ensureDir, exists } from "@std/fs";
 
 interface FoundItem {
@@ -93,7 +94,7 @@ async function crawlLabelImages(hero: string) {
 
           await saveImageToDisk(imageData, filePath);
 
-          await queue.add(() =>
+          await discordQueue.add(() =>
             discord.sendImageWithMessage(
               `🏷️ [Label Crawler] Found new skin label: ${skinId} - ${heroName} (Server: ${server})${getRolePing()}`,
               new Uint8Array(imageData),
@@ -161,7 +162,7 @@ async function crawlImages(hero: string) {
 
           await saveImageToDisk(imageData, filePath);
 
-          await queue.add(() =>
+          await discordQueue.add(() =>
             discord.sendImageWithMessage(
               `🎨 [Art Crawler] Found new skin art ID: ${skinId} - ${heroName} (Server: ${server})${getRolePing()}`,
               new Uint8Array(imageData),
@@ -225,7 +226,7 @@ async function crawlJoyTick(hero: string) {
 
           await saveImageToDisk(imageData, filePath);
 
-          await queue.add(() =>
+          await discordQueue.add(() =>
             discord.sendImageWithMessage(
               `🕹️ [JoyTick Crawler] Found new joystick: ${skinId} (Server: ${server})${getRolePing()}`,
               new Uint8Array(imageData),
@@ -284,7 +285,7 @@ async function crawlAvatarFrame(from: number, to: number) {
 
             await saveImageToDisk(imageData, filePath);
 
-            await queue.add(() =>
+            await discordQueue.add(() =>
               discord.sendImageWithMessage(
                 `🖼️ [Frame Crawler] Found new frame: ${frameId} (Server: ${server})${getRolePing()}`,
                 new Uint8Array(imageData),
@@ -391,7 +392,7 @@ const scanAll = async (): Promise<void> => {
     artCrawler(),
     labelCrawler(),
     joytickCrawler(),
-    frameCrawler(),
+    // frameCrawler(),
   ]);
 };
 
