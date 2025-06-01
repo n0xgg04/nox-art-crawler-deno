@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: "skin-crawler",
+      name: "deno run all --no-log",
       script: "./crawler-linux all --no-log",
     },
   ],
