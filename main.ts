@@ -11,6 +11,15 @@ import { discord } from "./core/discord.ts";
 import { discordQueue } from "./core/queue.ts";
 import { ensureDir, exists } from "@std/fs";
 
+let updateCrawlerStatus: (() => void) | undefined;
+
+try {
+  const botModule = await import("./bot.ts");
+  updateCrawlerStatus = botModule.updateCrawlerStatus;
+} catch {
+  updateCrawlerStatus = undefined;
+}
+
 interface FoundItem {
   id: string;
   apiLink: string;
@@ -313,6 +322,7 @@ function sleep(ms: number): Promise<void> {
 }
 
 const scanArt = async (): Promise<void> => {
+  updateCrawlerStatus?.();
   Found = [];
   await Promise.all(heroList.map(crawlImages));
   logger.log(`Found ${Found.length} new art.`);
@@ -320,6 +330,7 @@ const scanArt = async (): Promise<void> => {
 };
 
 const scanLabel = async (): Promise<void> => {
+  updateCrawlerStatus?.();
   Found2 = [];
   await Promise.all(heroList.map(crawlLabelImages));
   logger.log(`Found ${Found2.length} new labels.`);
@@ -327,12 +338,14 @@ const scanLabel = async (): Promise<void> => {
 };
 
 const scanJoyTick = async (): Promise<void> => {
+  updateCrawlerStatus?.();
   Found = [];
   await Promise.all(heroList.map(crawlJoyTick));
   logger.log("JoyTick scan completed.");
 };
 
 const scanFrame = async (): Promise<void> => {
+  updateCrawlerStatus?.();
   await crawlAvatarFrame(1, 9999);
   logger.log("Frame scan completed.");
 };

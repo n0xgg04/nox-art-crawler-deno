@@ -3,8 +3,8 @@
   "tasks": {
     "dev": "deno run --watch --env-file --allow-env --allow-read --allow-write --allow-net main.ts",
     "test": "deno run --env-file --allow-env --allow-net test.ts",
-    "all": "deno run --env-file --allow-env --allow-read --allow-write --allow-net main.ts all",
-    "all:no-log": "deno run --env-file --allow-env --allow-read --allow-write --allow-net main.ts all --no-log",
+    "all": "deno run --env-file --allow-env --allow-read --allow-write --allow-net bot.ts & deno run --env-file --allow-env --allow-read --allow-write --allow-net main.ts all",
+    "all:no-log": "deno run --env-file --allow-env --allow-read --allow-write --allow-net bot.ts & deno run --env-file --allow-env --allow-read --allow-write --allow-net main.ts all --no-log",
     "art": "deno run --env-file --allow-env --allow-read --allow-write --allow-net main.ts art",
     "art:no-log": "deno run --env-file --allow-env --allow-read --allow-write --allow-net main.ts art --no-log",
     "label": "deno run --env-file --allow-env --allow-read --allow-write --allow-net main.ts label",
@@ -13,6 +13,7 @@
     "frame:no-log": "deno run --env-file --allow-env --allow-read --allow-write --allow-net main.ts frame --no-log",
     "joytick": "deno run --env-file --allow-env --allow-read --allow-write --allow-net main.ts joytick",
     "joytick:no-log": "deno run --env-file --allow-env --allow-read --allow-write --allow-net main.ts joytick --no-log",
+    "bot": "deno run --env-file --allow-env --allow-read --allow-write --allow-net bot.ts",
     "build": "deno compile --allow-env --allow-read --allow-write --allow-net --output crawler main.ts",
     "build:windows": "deno compile --allow-env --allow-read --allow-write --allow-net --target x86_64-pc-windows-msvc --output crawler-windows.exe main.ts",
     "build:linux": "deno compile --allow-env --allow-read --allow-write --allow-net --target x86_64-unknown-linux-gnu --output crawler-linux main.ts",
@@ -35,6 +36,7 @@
   "imports": {
     "@std/assert": "jsr:@std/assert@1",
     "@std/fs": "jsr:@std/fs@1",
-    "p-queue": "npm:p-queue@^8.0.1"
+    "p-queue": "npm:p-queue@^8.0.1",
+    "discord.js": "npm:discord.js@^14.19.3"
   }
 }
