@@ -82,6 +82,116 @@ export const JSON = {
 - The crawler will try each server until it finds a valid image
 - Add or remove servers as needed for your game
 
+## Build & Compile
+
+### Compile to Standalone Executable
+
+Create standalone executables that don't require Deno to be installed:
+
+```bash
+# Compile for current platform
+deno compile --allow-env --allow-read --allow-write --allow-net --output crawler main.ts
+
+# Compile for specific platforms
+deno compile --allow-env --allow-read --allow-write --allow-net --target x86_64-pc-windows-msvc --output crawler-windows.exe main.ts
+deno compile --allow-env --allow-read --allow-write --allow-net --target x86_64-unknown-linux-gnu --output crawler-linux main.ts
+deno compile --allow-env --allow-read --allow-write --allow-net --target x86_64-apple-darwin --output crawler-macos main.ts
+deno compile --allow-env --allow-read --allow-write --allow-net --target aarch64-apple-darwin --output crawler-macos-arm64 main.ts
+```
+
+### Add Compile Tasks to deno.json
+
+Add these tasks to your `deno.json` for easy compilation:
+
+```json
+{
+  "tasks": {
+    "build": "deno compile --allow-env --allow-read --allow-write --allow-net --output crawler main.ts",
+    "build:windows": "deno compile --allow-env --allow-read --allow-write --allow-net --target x86_64-pc-windows-msvc --output crawler-windows.exe main.ts",
+    "build:linux": "deno compile --allow-env --allow-read --allow-write --allow-net --target x86_64-unknown-linux-gnu --output crawler-linux main.ts",
+    "build:macos": "deno compile --allow-env --allow-read --allow-write --allow-net --target x86_64-apple-darwin --output crawler-macos main.ts",
+    "build:macos-arm": "deno compile --allow-env --allow-read --allow-write --allow-net --target aarch64-apple-darwin --output crawler-macos-arm64 main.ts",
+    "build:all": "deno task build:windows && deno task build:linux && deno task build:macos && deno task build:macos-arm"
+  }
+}
+```
+
+### Usage After Compilation
+
+Once compiled, run the executable directly:
+
+```bash
+# Run compiled executable
+./crawler all --no-log
+
+# Windows
+crawler-windows.exe all --no-log
+
+# With environment file
+./crawler all --no-log  # Will automatically load .env if present
+```
+
+### Available Targets
+
+| Target | Platform | Architecture |
+|--------|----------|--------------|
+| `x86_64-pc-windows-msvc` | Windows | x64 |
+| `x86_64-unknown-linux-gnu` | Linux | x64 |
+| `x86_64-apple-darwin` | macOS | Intel |
+| `aarch64-apple-darwin` | macOS | Apple Silicon |
+
+### JavaScript Bundling
+
+Create JavaScript bundles that can run with Node.js:
+
+```bash
+# Bundle to JavaScript
+deno task bundle                    # Creates dist/crawler.js
+deno task bundle:minify            # Creates minified version (requires terser)
+
+# Manual bundling
+deno bundle main.ts dist/crawler.js
+```
+
+### JavaScript Execution
+
+Run the bundled JavaScript with Node.js:
+
+```bash
+# Run all crawlers
+deno task js:all                   # With logs
+deno task js:all:no-log           # Silent mode
+
+# Run individual crawlers
+deno task js:art                   # Art crawler
+deno task js:art:no-log           # Art crawler (silent)
+deno task js:label                # Label crawler
+deno task js:label:no-log         # Label crawler (silent)
+deno task js:frame                # Frame crawler
+deno task js:frame:no-log         # Frame crawler (silent)
+deno task js:joytick              # Joystick crawler
+deno task js:joytick:no-log       # Joystick crawler (silent)
+
+# Direct Node.js execution
+node dist/crawler.js all --no-log
+```
+
+### JavaScript Requirements
+
+To run the JavaScript bundle, you need:
+
+1. **Node.js** (version 16 or later)
+2. **Environment file** (`.env`) in the same directory
+3. **Required directories** (`data/` folder structure)
+
+### Bundle vs Executable Comparison
+
+| Method | Pros | Cons |
+|--------|------|------|
+| **Deno Executable** | Single file, no dependencies | Larger file size |
+| **JavaScript Bundle** | Smaller file, Node.js ecosystem | Requires Node.js installed |
+| **Native Deno** | Development friendly, hot reload | Requires Deno runtime |
+
 ## Usage
 
 ### Available Commands
