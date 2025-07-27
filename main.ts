@@ -273,45 +273,43 @@ async function crawlAvatarFrame(from: number, to: number) {
   await ensureDir("./data/frame/");
 
   for (let i = from; i <= to; i++) {
-    for (const type of avatarFrameType) {
-      const frameId = `${type}_HeadFrame${i}`;
-      const filePath = `./data/frame/${frameId}.png`;
+    const frameId = `HeadFrame${i}`;
+    const filePath = `./data/frame/${frameId}.png`;
 
-      if (await exists(filePath)) {
-        continue;
-      }
+    if (await exists(filePath)) {
+      continue;
+    }
 
-      for (const [server, api] of Object.entries(avatarFrameAPI)) {
-        const apiLink = `${api}${frameId}.png`;
+    for (const [server, api] of Object.entries(avatarFrameAPI)) {
+      const apiLink = `${api}${frameId}.png`;
 
-        try {
-          const response = await fetch(apiLink, {
-            signal: AbortSignal.timeout(5000),
-          });
+      try {
+        const response = await fetch(apiLink, {
+          signal: AbortSignal.timeout(5000),
+        });
 
-          if (response.ok) {
-            const imageData = await response.arrayBuffer();
+        if (response.ok) {
+          const imageData = await response.arrayBuffer();
 
-            await saveImageToDisk(imageData, filePath);
+          await saveImageToDisk(imageData, filePath);
 
-            await discordQueue.add(() =>
-              discord.sendImageWithMessage(
-                `🖼️ [Frame Crawler] Found new frame: ${frameId} (Server: ${server})${getRolePing()}`,
-                new Uint8Array(imageData),
-                `${frameId}.png`,
-                "frame"
-              )
-            );
-
-            logger.log(`Found frame type ${type} ${i} at server ${server}`);
-            break;
-          }
-        } catch (error) {
-          logger.error(
-            `Error fetching frame ${type} ${i} from ${server}:`,
-            error instanceof Error ? error.message : String(error)
+          await discordQueue.add(() =>
+            discord.sendImageWithMessage(
+              `🖼️ [Frame Crawler] Found new frame: ${frameId} (Server: ${server})${getRolePing()}`,
+              new Uint8Array(imageData),
+              `${frameId}.png`,
+              "frame"
+            )
           );
+
+          logger.log(`Found frame type  ${i} at server ${server}`);
+          break;
         }
+      } catch (error) {
+        logger.error(
+          `Error fetching frame  ${i} from ${server}:`,
+          error instanceof Error ? error.message : String(error)
+        );
       }
     }
   }
@@ -346,7 +344,7 @@ const scanJoyTick = async (): Promise<void> => {
 
 const scanFrame = async (): Promise<void> => {
   updateCrawlerStatus?.();
-  await crawlAvatarFrame(1, 9999);
+  await crawlAvatarFrame(600, 9999);
   logger.log("Frame scan completed.");
 };
 
