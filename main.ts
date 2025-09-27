@@ -344,7 +344,7 @@ const scanJoyTick = async (): Promise<void> => {
 
 const scanFrame = async (): Promise<void> => {
   updateCrawlerStatus?.();
-  await crawlAvatarFrame(7000, 1000);
+  await crawlAvatarFrame(700, 1000);
   await crawlAvatarFrame(2000, 3000);
   await crawlAvatarFrame(9000, 10000);
   logger.log("Frame scan completed.");
